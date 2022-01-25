@@ -1,0 +1,12 @@
+-
+  name: 'Execute a command to display date on target1'
+  hosts: target1
+  tasks:
+    - name: 'Execute a date command'
+      command: date
+-
+  name: 'Execute a command to display hosts file on target2'
+  hosts: target2
+  tasks:
+    - name: 'Execute a command to display hosts file'
+      command: cat /etc/hosts

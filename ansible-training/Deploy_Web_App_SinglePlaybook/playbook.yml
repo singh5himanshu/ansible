@@ -1,0 +1,58 @@
+- name: Deploy a web application
+  hosts: db_and_web_server1,db_and_web_server2
+  become: yes
+  tasks:
+    - name: Install Python and its dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - python
+        - python-setuptools
+        - python-dev
+        - build-essential
+        - python-pip
+        - python-mysqldb
+
+    - name: Install MySql database
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - mysql-server
+        - mysql-client
+
+    - name: Start MySql database
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: Create database
+      mysql_db:
+        name: employee_db
+        state: present
+
+    - name: Create dadabase user
+      mysql_user:
+        name: db_user
+        password: Passw0rd
+        priv: '*.*:ALL'
+        state: present
+        host: '%'
+
+    - name: Install Python Flask dependency
+      pip:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - flask
+        - flask-mysql
+
+    - name: Copy source code
+      copy:
+        src: app.py
+        dest: /opt/app.py
+
+    - name: Start web server
+      shell: FLASK_APP=app.py nohup flask run --host=0.0.0.0

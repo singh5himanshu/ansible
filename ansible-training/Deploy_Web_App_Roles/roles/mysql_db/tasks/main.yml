@@ -1,0 +1,26 @@
+  - name: Install MySql database
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - mysql-server
+      - mysql-client
+
+  - name: Start MySql database
+    service:
+      name: mysql
+      state: started
+      enabled: yes
+
+  - name: Create database
+    mysql_db:
+      name: "{{ db_name }}"
+      state: present
+
+  - name: Create dadabase user
+    mysql_user:
+      name: "{{ db_user }}"
+      password: "{{ db_user_password }}"
+      priv: '*.*:ALL'
+      state: present
+      host: '%'

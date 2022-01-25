@@ -1,0 +1,8 @@
+- name: Deploy a web application
+  hosts: db_and_web_server1,db_and_web_server2
+  become: yes
+
+  tasks:
+    - include: tasks/install_python_and_dependencies.yml
+    - include: tasks/deploy_db.yml
+    - include: tasks/deploy_web.yml
